@@ -77,6 +77,7 @@ app.get("/api/countUsers", async (req, res) => {
 app.get("/api/deleteUsers", async (req, res) => {
   try {
     await User.deleteMany();
+    res.status(200).send("Database resetted");
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
