@@ -1,5 +1,3 @@
-// Backend (Node.js with Express)
-
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -8,10 +6,13 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Connect to MongoDB (replace with your MongoDB connection string)
 mongoose
   .connect(
-    "mongodb+srv://pulkit:adminPulkit@portfolio.cghznwd.mongodb.net/?retryWrites=true&w=majority"
+    "mongodb+srv://pulkit:adminPulkit@portfolio.cghznwd.mongodb.net/?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
   )
   .then(() => {
     console.log("MongoDB connected successfully");
@@ -21,30 +22,24 @@ mongoose
   });
 
 const userSchema = new mongoose.Schema({
-  username: String,
-  email: String,
-  browserName: String,
-  browserVersion: String,
-  userAgentFull: String,
-  screenAvailWidth: Number,
-  screenAvailHeight: Number,
-  windowInnerWidth: Number,
-  windowInnerHeight: Number,
-  deviceType: String,
   isOnline: Boolean,
   connectionType: String,
-  batteryLevel: Object,
-  userAgent: String,
   language: String,
   platform: String,
   screenWidth: Number,
   screenHeight: Number,
-  colorDepth: Number,
   timezone: String,
-  cookiesEnabled: Boolean,
-  doNotTrack: String,
   referringUrl: String,
   currentUrl: String,
+  dateTime: Date,
+  country_code: String,
+  country_name: String,
+  city: String,
+  postal: String,
+  latitude: Number,
+  longitude: Number,
+  state: String,
+  ip: String,
 });
 
 const User = mongoose.model("User", userSchema);
@@ -52,7 +47,6 @@ const User = mongoose.model("User", userSchema);
 app.use(cors());
 app.use(bodyParser.json());
 
-// Endpoint to create a new user
 app.post("/api/users", async (req, res) => {
   try {
     const newUser = new User(req.body);
@@ -63,7 +57,6 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
-// Endpoint to count users
 app.get("/api/countUsers", async (req, res) => {
   try {
     const users = await User.find();
@@ -73,7 +66,6 @@ app.get("/api/countUsers", async (req, res) => {
   }
 });
 
-// Endpoint to delete users
 app.get("/api/deleteUsers", async (req, res) => {
   try {
     await User.deleteMany();
@@ -83,7 +75,6 @@ app.get("/api/deleteUsers", async (req, res) => {
   }
 });
 
-// Endpoint to getIp
 app.get("/api/getIpOfUser", async (req, res) => {
   try {
     const ipAddress = req.ip || req.connection.remoteAddress;
@@ -92,12 +83,6 @@ app.get("/api/getIpOfUser", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-app.use((req, res, next) => {
-  const ipAddress = req.ip || req.connection.remoteAddress;
-  console.log(`User IP address: ${ipAddress}`);
-  next();
-});
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
