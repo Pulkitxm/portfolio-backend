@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
   timezone: String,
   referringUrl: String,
   currentUrl: String,
-  dateTime: Date,
+  dateTime: String,
   country_code: String,
   country_name: String,
   city: String,
