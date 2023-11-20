@@ -93,6 +93,28 @@ app.get("/api/getIpOfUser", async (req, res) => {
   }
 });
 
+const projectSchema = new mongoose.Schema({
+  title: String,
+  genre: [String],
+  linkText: String,
+  link: String,
+  vidCode: String,
+  skills: String,
+  desc: String,
+  id: String,
+});
+
+const Project = mongoose.model("Project", projectSchema);
+
+app.get("/api/projects", async (req, res) => {
+  try {
+    const projects = await Project.find();
+    res.status(200).json(projects);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
